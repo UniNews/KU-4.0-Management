@@ -4,13 +4,11 @@
     <div class="container" style="height: 100vh;">
       <div class="columns is-vcentered is-mobile" style="height: 100%;">
         <div class="column">
-          <div class="columns">
-            <div class="column"></div>
+          <div class="columns is-centered">
             <div class="column is-two-fifths">
               <div class="card">
                 <div class="card-content">
-                  <div class="columns is-mobile">
-                    <div class="column"></div>
+                  <div class="columns is-centered is-mobile">
                     <div class="column is-two-fifths">
                       <div>
                         <figure class="image is-128x64">
@@ -21,10 +19,8 @@
                         </figure>
                       </div>
                     </div>
-                    <div class="column"></div>
                   </div>
-                  <div class="columns is-mobile">
-                    <div class="column"></div>
+                  <div class="columns is-centered is-mobile">
                     <div class="column is-four-fifths">
                       <b-field>
                           <b-input 
@@ -43,23 +39,19 @@
                           ></b-input>
                       </b-field>
                     </div>
-                    <div class="column"></div>
                   </div>
-                  <div class="columns is-mobile">
-                    <div class="column"></div>
-                    <div class="column">
+                  <div class="columns is-centered is-mobile">
+                    <div class="column is-one-third">
                       <b-button 
                         type="is-primary"  
                         expanded rounded
                         @click="onSubmit(username, password)"
                       >Login</b-button>
                     </div>
-                    <div class="column"></div>
                   </div>
                 </div>
               </div>
             </div>
-            <div class="column"></div>
           </div>
         </div>
       </div>
