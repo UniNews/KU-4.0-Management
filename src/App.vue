@@ -1,7 +1,7 @@
 <template>
   <div>
     <Header />
-    <div>
+    <div class="pageFullHeight">
       <router-view></router-view>
     </div>
     <Footer />
@@ -19,4 +19,10 @@ export default {
 </script>
 
 <style>
+.pageFullHeight {
+  height: 100vh;
+}
+.fullHeight {
+  height: 100%;
+}
 </style>
