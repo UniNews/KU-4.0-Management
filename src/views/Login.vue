@@ -94,6 +94,5 @@ export default {
 }
 .backgroundImage {
   background-image: linear-gradient(to bottom right, green, lightgreen);
-
 }
 </style>

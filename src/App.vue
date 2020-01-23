@@ -1,7 +1,11 @@
 <template>
   <div>
     <Header />
-    <div class="pageFullHeight">
+    <div class="pageFullHeight" v-if="!isAuthenticated">
+      <router-view></router-view>
+    </div>
+    <div class="pageFullHeight" v-else>
+      <navbar></navbar>
       <router-view></router-view>
     </div>
     <Footer />
@@ -11,10 +15,18 @@
 <script>
 import Footer from "./components/partials/Foorter";
 import Header from "./components/partials/Header";
+import Navbar from "@/components/Navbar/Navbar";
+import { mapState, mapGetters } from "vuex";
 
 export default {
   name: "app",
-  components: { Footer, Header }
+  components: { Footer, Header, Navbar },
+  computed: {
+    ...mapGetters(["isAuthenticated"])
+  },
+  methods: {
+
+  }
 };
 </script>
 

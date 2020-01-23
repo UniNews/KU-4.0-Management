@@ -1,12 +1,17 @@
 <template>
   <div>
-    <h1>You have logged in !</h1>
+    <navbar></navbar>
+    
   </div>
 </template>
 
 <script>
-export default {
+import Navbar from "@/components/Navbar/Navbar.vue";
 
+export default {
+  components: {
+    Navbar
+  }
 }
 </script>
 
