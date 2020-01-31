@@ -43,7 +43,7 @@
                     <b-button 
                       type="is-primary"  
                       expanded rounded
-                      @click="onSubmit(username, password)"
+                      @click="onSubmit()"
                     >Login</b-button>
                   </div>
                 </div>
@@ -58,7 +58,7 @@
 
 <script>
 import { mapState, mapGetters } from "vuex";
-import { LOGIN, REGISTER } from "@/store/actions.type";
+import { LOGIN, AUTOLOGIN } from "@/store/actions.type";
 
 export default {
   name: "Login",
@@ -69,9 +69,12 @@ export default {
     };
   },
   methods: {
-    onSubmit(username, password) {
-      this.$store.dispatch(LOGIN, { username, password });
-      if(this.isAuthenticated) this.$router.push("/dashboard");
+    onSubmit() {
+      this.$store.dispatch(LOGIN, { 
+        username: this.username, 
+        password: this.password 
+      });
+      // if(this.isAuthenticated) this.$router.push("/dashboard");
     }
   },
   computed: {

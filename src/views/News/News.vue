@@ -148,6 +148,7 @@
 <script>
 import HeaderComp from "@/components/Mainpage/Header.vue";
 import CardComp from "@/components/Mainpage/Card.vue";
+import newsAxios from "@/axios/newsAxios.js";
 
 export default {
   components: { HeaderComp, CardComp },
@@ -186,6 +187,15 @@ export default {
       isDetailCardModalActive: false,
       isRemoveCardModalActive: false,
     }
+  },
+  created() {
+    newsAxios.getAllNews()
+      .then(res => {
+        console.log(res);
+      })
+      .catch(err => {
+        console.log(err);
+      });
   },
   methods: {
     addButtonClicked() {
