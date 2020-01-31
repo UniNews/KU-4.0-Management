@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="bgThemeColor">
     <Header />
     <div class="pageFullHeight" v-if="!isAuthenticated">
       <router-view></router-view>
@@ -36,5 +36,8 @@ export default {
 }
 .fullHeight {
   height: 100%;
+}
+.bgThemeColor {
+  background-color: hsl(0, 0%, 96%)
 }
 </style>
