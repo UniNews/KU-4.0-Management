@@ -38,17 +38,28 @@
           <i class="material-icons">account_circle</i>
         </div>
       </b-navbar-item>
+      <b-navbar-item class="adminSection" tag="div">
+        <div class="adminSection" @click="logoutButtonClicked()">
+          <p class="adminName">Log out</p>
+        </div>
+      </b-navbar-item>
     </template>
   </b-navbar>
 </template>
 
 <script>
+import { LOGOUT } from "@/store/actions.type";
+
 export default {
   data() {
     return {
     }
   },
   methods: {
+    logoutButtonClicked() {
+      this.$store.dispatch(LOGOUT);
+      location.reload();
+    }
   }
 }
 </script>
