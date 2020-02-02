@@ -10,10 +10,10 @@
                   <div class="column is-two-fifths">
                     <div>
                       <figure class="image is-128x64">
-                        <img 
-                          src="https://www.techtalkthai.com/wp-content/uploads/2019/11/new-microsoft-edge-logo-600x400.jpg" 
+                        <img
+                          src="https://www.techtalkthai.com/wp-content/uploads/2019/11/new-microsoft-edge-logo-600x400.jpg"
                           alt="Logo Image"
-                        >
+                        />
                       </figure>
                     </div>
                   </div>
@@ -21,30 +21,26 @@
                 <div class="columns is-centered is-mobile">
                   <div class="column is-full-mobile is-four-fifths-tablet">
                     <b-field>
-                        <b-input 
-                          class="paddingY10px"
-                          placeholder="Username"
-                          type="text"
-                          v-model="username"
-                        ></b-input>
+                      <b-input
+                        class="paddingY10px"
+                        placeholder="Username"
+                        type="text"
+                        v-model="username"
+                      ></b-input>
                     </b-field>
                     <b-field>
-                        <b-input 
-                          class="paddingY10px"
-                          placeholder="Password"
-                          type="password"
-                          v-model="password"
-                        ></b-input>
+                      <b-input
+                        class="paddingY10px"
+                        placeholder="Password"
+                        type="password"
+                        v-model="password"
+                      ></b-input>
                     </b-field>
                   </div>
                 </div>
                 <div class="columns is-centered is-mobile">
                   <div class="column is-one-third">
-                    <b-button 
-                      type="is-primary"  
-                      expanded rounded
-                      @click="onSubmit()"
-                    >Login</b-button>
+                    <b-button type="is-primary" expanded rounded @click="onSubmit()">Login</b-button>
                   </div>
                 </div>
               </div>
@@ -52,7 +48,7 @@
           </div>
         </div>
       </div>
-    </div> 
+    </div>
   </div>
 </template>
 
@@ -70,15 +66,20 @@ export default {
   },
   methods: {
     onSubmit() {
-      this.$store.dispatch(LOGIN, { 
-        username: this.username, 
-        password: this.password 
+      this.$store.dispatch(LOGIN, {
+        username: this.username,
+        password: this.password
       });
       // if(this.isAuthenticated) this.$router.push("/dashboard");
     }
   },
   computed: {
     ...mapGetters(["isAuthenticated"])
+  },
+  watch: {
+    isAuthenticated(newValue, oldValue) {
+      if (newValue === true) this.$router.push("/dashboard");
+    }
   }
 };
 </script>
