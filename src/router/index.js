@@ -15,94 +15,97 @@ import Users from "@/views/Users/Users.vue"
 import UsersAdd from "@/views/Users/UsersAdd.vue"
 import UsersEdit from "@/views/Users/UsersEdit.vue"
 import store from "@/store/index.js";
+import { AUTO_LOGIN } from '@/store/actions.type'
 
 Vue.use(Router)
 
 const router = new Router({
   routes: [
-      {
-          path: '/',
-          name: 'Login',
-          component: Login
-      },
-      {
-          path: "/dashboard",
-          name: "Dashboard",
-          component: Dashboard
-      },
-      // Clubs
-      {
-        path: "/clubs",
-        name: "Clubs",
-        component: Clubs
-      },
-      {
-        path: "/addClubs",
-        name: "AddClubs",
-        component: ClubsAdd
-      },
-      {
-        path: "/editClubs/:id",
-        name: "EditClubs",
-        component: ClubsEdit
-      },
-      // Stores
-      {
-        path: "/stores",
-        name: "Stores",
-        component: Stores
-      },
-      {
-        path: "/addStores",
-        name: "AddStores",
-        component: StoresAdd
-      },
-      {
-        path: "/editStores/:id",
-        name: "EditStores",
-        component: StoresEdit
-      },
-      // News
-      {
-        path: "/news",
-        name: "News",
-        component: News
-      },
-      {
-        path: "/addNews",
-        name: "AddNews",
-        component: NewsAdd
-      },
-      {
-        path: "/editNews/:id",
-        name: "EditNews",
-        component: NewsEdit
-      },
-      // Users
-      {
-        path: "/users",
-        name: "Users",
-        component: Users
-      },
-      {
-        path: "/addUsers",
-        name: "AddUsers",
-        component: UsersAdd
-      },
-      {
-        path: "/editUsers/:id",
-        name: "EditUsers",
-        component: UsersEdit
-      },
+    {
+      path: '/',
+      name: 'Login',
+      component: Login
+    },
+    {
+      path: "/dashboard",
+      name: "Dashboard",
+      component: Dashboard
+    },
+    // Clubs
+    {
+      path: "/clubs",
+      name: "Clubs",
+      component: Clubs
+    },
+    {
+      path: "/addClubs",
+      name: "AddClubs",
+      component: ClubsAdd
+    },
+    {
+      path: "/editClubs/:id",
+      name: "EditClubs",
+      component: ClubsEdit
+    },
+    // Stores
+    {
+      path: "/stores",
+      name: "Stores",
+      component: Stores
+    },
+    {
+      path: "/addStores",
+      name: "AddStores",
+      component: StoresAdd
+    },
+    {
+      path: "/editStores/:id",
+      name: "EditStores",
+      component: StoresEdit
+    },
+    // News
+    {
+      path: "/news",
+      name: "News",
+      component: News
+    },
+    {
+      path: "/addNews",
+      name: "AddNews",
+      component: NewsAdd
+    },
+    {
+      path: "/editNews/:id",
+      name: "EditNews",
+      component: NewsEdit
+    },
+    // Users
+    {
+      path: "/users",
+      name: "Users",
+      component: Users
+    },
+    {
+      path: "/addUsers",
+      name: "AddUsers",
+      component: UsersAdd
+    },
+    {
+      path: "/editUsers/:id",
+      name: "EditUsers",
+      component: UsersEdit
+    },
   ]
 });
 
 router.beforeEach((to, from, next) => {
-  if(to.path === "/") {
-    if(store.state.auth.isAuthenticated)next("/dashbaord");
+  // try to login first
+  store.dispatch(AUTO_LOGIN)
+  if (to.path === "/") {
+    if (store.getters.isAuthenticated) next("/dashbaord");
     else next();
   } else {
-    if(store.state.auth.isAuthenticated) next();
+    if (store.getters.isAuthenticated) next();
     else next("/");
   }
 });

@@ -1,31 +1,32 @@
 import {
-    SET_AUTH,
-    PURGE_AUTH,
-    SET_ERROR,
-    SET_LOADING
+  AUTH_LOADING,
+  AUTH_SUCCESS,
+  AUTH_FAIL,
+  AUTH_PURGE
 } from './../mutations.type'
 import {
-    LOGIN,
-    LOGOUT
+  LOGIN,
+  LOGOUT,
+  AUTO_LOGIN
 } from './../actions.type'
-import authAxios from "@/axios/authAxios.js";
-import router from "@/router/index.js";
+import userService from '@/services/user'
+import axios from 'axios'
 
 const state = {
-    user: null,
-    error: null,
-    loading: false,
-    isAuthenticated: false
+  token: null,
+  user: null,
+  error: null,
+  loading: false,
 }
 
 const getters = {
   isAuthenticated(state) {
-    return state.isAuthenticated;
+    return !!state.token
   },
   getUser(state) {
     return state.user
   },
-  getError(state) {
+  isError(state) {
     return state.error
   },
   isLoading(state) {
@@ -35,53 +36,62 @@ const getters = {
 
 const actions = {
   [LOGIN](context, credentials) {
-    context.commit(SET_LOADING, true);
+    context.commit(AUTH_LOADING)
     // Calling POST /tokens
-    authAxios.login({
-      grant_type: "password",
-      username: credentials.username,
-      password: credentials.password
-    }).then(result => {
-      // Put user information
-      context.commit(SET_AUTH, result.data);
-      context.commit(SET_ERROR, null);
-      router.replace("/dashboard");
+    userService.login(credentials.username, credentials.password).then(result => {
+      // Put user information      
+      const token = result.data.access_token
+      const user = result.data.id_token
+      localStorage.setItem('token', token)
+      axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
+      context.commit(AUTH_SUCCESS, token, user)
     }).catch(err => {
-      context.commit(SET_ERROR, {
-        status: "error",
-        message: "Login Failed !!!"
-      });
-    });
-    context.commit(SET_LOADING, false);
+      localStorage.removeItem('token')
+      context.commit(AUTH_FAIL)
+    })
+  },
+  [AUTO_LOGIN](context) {
+    context.commit(AUTH_LOADING)
+    const token = localStorage.getItem('token')
+    axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
+    // TODO: call GET /profile by using token as a header to get user profile
+    context.commit(AUTH_SUCCESS, token, {})
   },
   [LOGOUT](context) {
-    context.commit(SET_LOADING, true);
-    context.commit(PURGE_AUTH, true);
-    context.commit(SET_LOADING, false);
-    router.replace("/");
+    context.commit(AUTH_LOADING)
+    localStorage.removeItem('token')
+    delete axios.defaults.headers.common['Authorization']
+    context.commit(AUTH_PURGE)
   },
 }
 
 const mutations = {
-  [SET_ERROR](state, error) {
-    state.errors = error;
+  [AUTH_FAIL](state) {
+    state.token = null
+    state.user = null
+    state.error = true
+    state.loading = false
   },
-  [SET_AUTH](state, user) {
-    state.user = user;
-    state.isAuthenticated = true;
+  [AUTH_SUCCESS](state, token, user) {
+    state.token = token
+    state.user = user
+    state.error = false
+    state.loading = false
   },
-  [PURGE_AUTH](state) {
-    state.isAuthenticated = false;
-    state.user = null;
+  [AUTH_PURGE](state) {
+    state.token = null
+    state.user = null
+    state.error = false
+    state.loading = false
   },
-  [SET_LOADING](state, isLoading) {
-    state.loading = isLoading
+  [AUTH_LOADING](state) {
+    state.loading = true
   }
 }
 
 export default {
-    state,
-    actions,
-    mutations,
-    getters
+  state,
+  actions,
+  mutations,
+  getters
 }
