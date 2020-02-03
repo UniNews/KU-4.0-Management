@@ -9,9 +9,14 @@
       <template v-slot:body>
         <news-form
           :isEdit="false"
+          @createSaveButtonClicked="createNews"
         ></news-form>
       </template>
     </card-comp>
+    <!-- Loading -->
+    <loading-comp
+      :isLoading="isLoading"
+    ></loading-comp>
   </div>
 </template>
 
@@ -19,37 +24,38 @@
 import HeaderComp from "@/components/Mainpage/Header.vue";
 import CardComp from "@/components/Mainpage/Card.vue";
 import NewsForm from "@/views/News/NewsForm.vue";
+import newsService from "@/services/news.js";
+import LoadingComp from "@/components/Mainpage/Loading.vue";
+import alertMixin from "@/mixins/alert.js";
 
 export default {
-  components: { HeaderComp, CardComp, NewsForm },
+  mixins: [ alertMixin ],
+  components: { HeaderComp, CardComp, NewsForm, LoadingComp },
   data() {
     return {
+      isLoading: false,
     }
   },
   methods: {
-    addButtonClicked() {
-      this.$router.push("/addNews");
+    createNews(event) {
+      this.isLoading = true;
+      setTimeout(() => {
+        newsService.createNews(event)
+          .then(res => {
+            this.notificationTrigger("News has been created", "success");
+            this.isLoading = false;
+          })
+          .catch(err => {
+            this.notificationTrigger("ERROR !!!", "danger");
+            this.isLoading = false;
+            console.log(err);
+          });
+        this.$router.back();
+      }, 1000);
     }
   } 
 }
 </script>
 
 <style scoped>
-.bottomBorderGrey {
-  border-bottom: 2px solid grey;
-}
-.bottomBorderLightGrey {
-  border-bottom: 2px solid lightgrey;
-}
-.cursorPointer {
-  cursor: pointer;
-}
-.marginX15px {
-  margin-left: 15px;
-  margin-right: 15px;
-}
-.marginY15px {
-  margin-top: 15px;
-  margin-bottom: 15px;
-}
 </style>

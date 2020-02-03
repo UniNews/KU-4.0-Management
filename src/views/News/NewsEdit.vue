@@ -9,9 +9,16 @@
       <template v-slot:body>
         <news-form
           :isEdit="true"
+          :newsId="newsId"
+          :newsDetailOriginal="newsDetail"
+          @updateSaveButtonClicked="updateNews"
         ></news-form>
       </template>
     </card-comp>
+    <!-- Loading -->
+    <loading-comp
+      :isLoading="isLoading"
+    ></loading-comp>
   </div>
 </template>
 
@@ -19,67 +26,53 @@
 import HeaderComp from "@/components/Mainpage/Header.vue";
 import CardComp from "@/components/Mainpage/Card.vue";
 import NewsForm from "@/views/News/NewsForm.vue";
+import newsService from "@/services/news.js";
+import LoadingComp from "@/components/Mainpage/Loading.vue";
+import alertMixin from "@/mixins/alert.js";
 
 export default {
-  components: { HeaderComp, CardComp, NewsForm },
+  mixins: [ alertMixin ],
+  components: { HeaderComp, CardComp, NewsForm, LoadingComp },
   data() {
     return {
-      sortChoices: [
-        { value: 0, text: "Sort by name" },
-        { value: 1, text: "Sort by category" },
-        { value: 2, text: "Sort by news" },
-        { value: 3, text: "Sort by date" },
-      ],
-      searchInput: "",
-      mockupData: [
-        {
-          id: 0,
-          name: "KU Potential Club",
-          category: "Buddhism",
-          news: 101112,
-          latestupdate: "1010/10/10"
-        },
-        {
-          id: 1,
-          name: "KU Potential Club",
-          category: "Buddhism",
-          news: 101112,
-          latestupdate: "1010/10/10"
-        },
-        {
-          id: 2,
-          name: "KU Potential Club",
-          category: "Buddhism",
-          news: 101112,
-          latestupdate: "1010/10/10"
-        },
-      ],
+      newsId: null,
+      newsDetail: {},
+      isLoading: false,
     }
+  },
+  created() {
+    this.newsId = this.$route.params.id;
+    newsService.getNewsById({ id: this.newsId })
+      .then(res => {
+        this.newsDetail = {...res.data};
+      })
+      .catch(err => {
+        console.log(err);
+      });
   },
   methods: {
     addButtonClicked() {
       this.$router.push("/addClubs");
+    },
+    updateNews(event) {
+      this.isLoading = true;
+      setTimeout(() => {
+        newsService.updateNewsById(event)
+          .then(res => {
+            this.notificationTrigger("News has been updated", "success");
+            this.isLoading = false;
+          })
+          .catch(err => {
+            this.notificationTrigger("ERROR !!!", "danger");
+            this.isLoading = false;
+            console.log(err);
+          });
+        this.$router.back();
+      }, 1000);
     }
   } 
 }
 </script>
 
 <style scoped>
-.bottomBorderGrey {
-  border-bottom: 2px solid grey;
-}
-.bottomBorderLightGrey {
-  border-bottom: 2px solid lightgrey;
-}
-.cursorPointer {
-  cursor: pointer;
-}
-.marginX15px {
-  margin-left: 15px;
-  margin-right: 15px;
-}
-.marginY15px {
-  margin-top: 15px;
-  margin-bottom: 15px;
-}
 </style>
