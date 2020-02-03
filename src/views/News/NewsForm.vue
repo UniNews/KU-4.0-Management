@@ -2,11 +2,11 @@
   <div>
     <div v-if="isEdit" class="columns is-centered is-mobile">
       <div class="column is-half-mobile is-one-third-tablet">
-        <img 
-          class="stretchImage blackBorder" 
-          :src="imageURL" 
+        <img
+          class="stretchImage blackBorder"
+          :src="imageURL"
           alt="Image of the club"
-        >
+        />
       </div>
     </div>
     <div class="columns">
@@ -19,41 +19,52 @@
     <div class="columns">
       <div class="column">
         <b-field label="Type">
-            <b-select placeholder="Select type" v-model="type" expanded>
-                <option
-                    v-for="option in types"
-                    :value="option.value"
-                    :key="option.value">
-                    {{ option.text }}
-                </option>
-            </b-select>
+          <b-select placeholder="Select type" v-model="type" expanded>
+            <option
+              v-for="option in types"
+              :value="option.value"
+              :key="option.value"
+            >
+              {{ option.text }}
+            </option>
+          </b-select>
         </b-field>
       </div>
     </div>
     <div class="columns">
       <div class="column">
         <b-field label="News Detail">
-            <b-input type="textarea" v-model="description"></b-input>
+          <b-input type="textarea" v-model="description"></b-input>
         </b-field>
       </div>
     </div>
     <b-field class="file">
-        <b-upload v-model="file">
-            <a class="button is-primary">
-                <b-icon icon="upload"></b-icon>
-                <span>Click to upload</span>
-            </a>
-        </b-upload>
-        <span class="file-name" v-if="file">
-            {{ file.name }}
-        </span>
+      <b-upload v-model="file">
+        <a class="button is-primary">
+          <b-icon icon="upload"></b-icon>
+          <span>Click to upload</span>
+        </a>
+      </b-upload>
+      <span class="file-name" v-if="file">
+        {{ file.name }}
+      </span>
     </b-field>
     <div class="columns marginY10px">
       <div class="column is-one-third-tablet">
-        <button class="button is-success is-fullwidth" @click="saveButtonClicked()"><b>SAVE</b></button>
+        <button
+          class="button is-success is-fullwidth"
+          @click="saveButtonClicked()"
+        >
+          <b>SAVE</b>
+        </button>
       </div>
       <div class="column is-one-third-tablet">
-        <button class="button is-success is-outlined is-fullwidth" @click="cancelButtonClicked()"><b>CANCEL</b></button>
+        <button
+          class="button is-success is-outlined is-fullwidth"
+          @click="cancelButtonClicked()"
+        >
+          <b>CANCEL</b>
+        </button>
       </div>
     </div>
   </div>
@@ -76,10 +87,10 @@ export default {
         { value: "club", text: "Club" },
         { value: "promotions", text: "Promotion" },
         { value: "lost-founds", text: "Lost & Founds" },
-        { value: "universities", text: "Universities" },
+        { value: "universities", text: "Universities" }
       ],
-      description: null,
-    }
+      description: null
+    };
   },
   watch: {
     newsDetailOriginal() {
@@ -95,12 +106,14 @@ export default {
     },
     saveButtonClicked() {
       let images = [];
-      if(this.imageURL) {
+      if (this.imageURL) {
         images.push(this.imageURL);
       } else {
-        images.push("https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcTK-CsPyTnscg0U7fTFrmQn1eYrMLJ-UOVQYFvBrAeqjg-iSQMW");
+        images.push(
+          "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcTK-CsPyTnscg0U7fTFrmQn1eYrMLJ-UOVQYFvBrAeqjg-iSQMW"
+        );
       }
-      if(this.isEdit) {
+      if (this.isEdit) {
         let updatedData = {
           id: this.newsId,
           data: {
@@ -117,7 +130,7 @@ export default {
           title: this.title,
           description: this.description,
           type: this.type
-        }
+        };
         this.$emit("createSaveButtonClicked", createdData);
       }
     },
@@ -125,7 +138,7 @@ export default {
       this.$router.back();
     }
   }
-}
+};
 </script>
 
 <style scoped>

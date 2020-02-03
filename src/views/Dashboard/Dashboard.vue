@@ -1,7 +1,6 @@
 <template>
   <div>
     <navbar></navbar>
-    
   </div>
 </template>
 
@@ -12,8 +11,7 @@ export default {
   components: {
     Navbar
   }
-}
+};
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>

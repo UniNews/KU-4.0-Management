@@ -5,19 +5,23 @@
         <div class="textCenter marginBottom20px font20px">
           <b>Are you sure to delete this {{ context }} ?</b>
         </div>
-        <hr>
+        <hr />
         <div class="columns is-centered">
           <div class="column is-two-fifths">
-            <button 
+            <button
               class="button is-success is-fullwidth"
               @click="confirmButtonClicked()"
-            ><b>CONFIRM</b></button>
+            >
+              <b>CONFIRM</b>
+            </button>
           </div>
           <div class="column is-two-fifths">
-            <button 
+            <button
               class="button is-success is-fullwidth is-outlined"
               @click="cancelButtonClicked()"
-            ><b>CANCEL</b></button>
+            >
+              <b>CANCEL</b>
+            </button>
           </div>
         </div>
       </div>
@@ -34,14 +38,14 @@ export default {
   data() {
     return {
       modalStatus: false
-    }
+    };
   },
   watch: {
     status() {
       this.modalStatus = status;
     },
     modalStatus() {
-      if(!this.modalStatus) {
+      if (!this.modalStatus) {
         this.$emit("modalClosed");
       }
     }
@@ -58,7 +62,7 @@ export default {
       this.closeModal();
     }
   }
-}
+};
 </script>
 
 <style scoped>
@@ -71,5 +75,4 @@ export default {
 .font20px {
   font-size: 20px;
 }
-
 </style>

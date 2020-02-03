@@ -14,12 +14,6 @@
   </div>
 </template>
 
-<script>
-export default {
-
-}
-</script>
-
 <style scoped>
 .marginBottom10px {
   margin-bottom: 10px;

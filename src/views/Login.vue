@@ -4,7 +4,9 @@
       <div class="columns is-vcentered is-mobile fullHeight">
         <div class="column">
           <div class="columns is-centered is-mobile">
-            <div class="column is-two-fifths-tablet is-three-fifths-mobile card">
+            <div
+              class="column is-two-fifths-tablet is-three-fifths-mobile card"
+            >
               <div class="card-content">
                 <div class="columns is-centered is-mobile">
                   <div class="column is-two-fifths">
@@ -40,7 +42,13 @@
                 </div>
                 <div class="columns is-centered is-mobile">
                   <div class="column is-one-third">
-                    <b-button type="is-primary" expanded rounded @click="onSubmit()">Login</b-button>
+                    <b-button
+                      type="is-primary"
+                      expanded
+                      rounded
+                      @click="onSubmit()"
+                      >Login</b-button
+                    >
                   </div>
                 </div>
               </div>

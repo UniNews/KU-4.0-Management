@@ -6,21 +6,26 @@
           <b>{{ context }} DETAIL</b>
         </div>
         <div v-for="(value, name) in displayObject" :key="name">
-          <b>{{ name }}</b><span class="marginLeft20px">{{ value }}</span>
-          <hr>
+          <b>{{ name }}</b
+          ><span class="marginLeft20px">{{ value }}</span>
+          <hr />
         </div>
         <div class="columns is-centered">
           <div class="column is-two-fifths">
-            <button 
+            <button
               class="button is-success is-fullwidth"
               @click="editButtonClicked()"
-            ><b>EDIT</b></button>
+            >
+              <b>EDIT</b>
+            </button>
           </div>
           <div class="column is-two-fifths">
-            <button 
+            <button
               class="button is-success is-fullwidth is-outlined"
               @click="removeButtonClicked()"
-            ><b>REMOVE</b></button>
+            >
+              <b>REMOVE</b>
+            </button>
           </div>
         </div>
       </div>
@@ -33,19 +38,19 @@ export default {
   props: {
     status: Boolean,
     context: String,
-    displayObject: Object,
+    displayObject: Object
   },
   data() {
     return {
-      modalStatus: false,
-    }
+      modalStatus: false
+    };
   },
   watch: {
     status() {
       this.modalStatus = this.status;
     },
     modalStatus() {
-      if(!this.modalStatus) {
+      if (!this.modalStatus) {
         this.$emit("modalClosed");
       }
     }
@@ -58,7 +63,7 @@ export default {
       this.$emit("remove");
     }
   }
-}
+};
 </script>
 
 <style scoped>
@@ -74,5 +79,4 @@ export default {
 .marginLeft20px {
   margin-left: 20px;
 }
-
 </style>

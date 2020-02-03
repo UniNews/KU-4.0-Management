@@ -24,9 +24,7 @@ export default {
   computed: {
     ...mapGetters(["isAuthenticated"])
   },
-  methods: {
-
-  }
+  methods: {}
 };
 </script>
 
@@ -38,6 +36,6 @@ export default {
   height: 100%;
 }
 .bgThemeColor {
-  background-color: hsl(0, 0%, 96%)
+  background-color: hsl(0, 0%, 96%);
 }
 </style>

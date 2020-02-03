@@ -4,9 +4,9 @@ export default {
       this.$buefy.notification.open({
         duration: 2000,
         message: `${message}`,
-        position: 'is-bottom-right',
+        position: "is-bottom-right",
         type: `is-${type}`
       });
     }
   }
-}
+};

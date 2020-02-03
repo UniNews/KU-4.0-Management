@@ -14,9 +14,7 @@
       </template>
     </card-comp>
     <!-- Loading -->
-    <loading-comp
-      :isLoading="isLoading"
-    ></loading-comp>
+    <loading-comp :isLoading="isLoading"></loading-comp>
   </div>
 </template>
 
@@ -29,18 +27,19 @@ import LoadingComp from "@/components/Mainpage/Loading.vue";
 import alertMixin from "@/mixins/alert.js";
 
 export default {
-  mixins: [ alertMixin ],
+  mixins: [alertMixin],
   components: { HeaderComp, CardComp, NewsForm, LoadingComp },
   data() {
     return {
-      isLoading: false,
-    }
+      isLoading: false
+    };
   },
   methods: {
     createNews(event) {
       this.isLoading = true;
       setTimeout(() => {
-        newsService.createNews(event)
+        newsService
+          .createNews(event)
           .then(res => {
             this.notificationTrigger("News has been created", "success");
             this.isLoading = false;
@@ -53,9 +52,8 @@ export default {
         this.$router.back();
       }, 1000);
     }
-  } 
-}
+  }
+};
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>
