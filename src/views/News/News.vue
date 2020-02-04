@@ -19,7 +19,11 @@
           <div class="column">
             <div class="columns">
               <div class="column">
-                <b-select placeholder="Sort selection" expanded>
+                <b-select
+                  placeholder="Sort selection"
+                  v-model="sortSelection"
+                  expanded
+                >
                   <option
                     v-for="option in sortChoices"
                     :value="option.value"
@@ -114,19 +118,22 @@ import LoadingComp from "@/components/Mainpage/Loading.vue";
 import RemoveModal from "@/components/Mainpage/RemoveModal.vue";
 import DetailModal from "@/components/Mainpage/DetailModal.vue";
 import alertMixin from "@/mixins/alert.js";
+import detailModalMixin from "@/mixins/detailModal.js";
 
 export default {
-  mixins: [alertMixin],
+  mixins: [alertMixin, detailModalMixin],
   components: { HeaderComp, CardComp, LoadingComp, DetailModal, RemoveModal },
   data() {
     return {
+      sortSelection: "byTitle",
       sortChoices: [
-        { value: 0, text: "Sort by title" },
-        { value: 1, text: "Sort by source" },
-        { value: 2, text: "Sort by type" }
+        { value: "byTitle", text: "Sort by title" },
+        { value: "bySource", text: "Sort by source" },
+        { value: "byType", text: "Sort by type" }
       ],
       searchInput: "",
       newsData: [],
+      newsDataOriginal: [],
       newsDetailId: null,
       newsDetailObject: null,
       isDetailCardModalActive: false,
@@ -140,15 +147,26 @@ export default {
   computed: {
     getDetailModalObject() {
       return {
-        Category: this.newsDetailObject ? this.newsDetailObject.type : "",
+        Category: this.checkNullAndExist(this.newsDetailObject, "type"),
         Source: this.newsDetailObject
           ? this.newsDetailObject.user.displayName
+            ? this.newsDetailObject.user.displayName
+            : "-"
           : "",
-        Title: this.newsDetailObject ? this.newsDetailObject.title : "",
-        Description: this.newsDetailObject
-          ? this.newsDetailObject.description
-          : ""
+        Title: this.checkNullAndExist(this.newsDetailObject, "title"),
+        Description: this.checkNullAndExist(
+          this.newsDetailObject,
+          "description"
+        )
       };
+    }
+  },
+  watch: {
+    searchInput() {
+      this.editDisplayData();
+    },
+    sortSelection() {
+      this.editDisplayData();
     }
   },
   methods: {
@@ -157,9 +175,14 @@ export default {
         .getAllNews()
         .then(res => {
           this.newsData = [...res.data];
+          this.newsDataOriginal = [...res.data];
           this.newsData = this.newsData.filter(el => {
             return el.type !== "lost-founds";
           });
+          this.newsDataOriginal = this.newsData.filter(el => {
+            return el.type !== "lost-founds";
+          });
+            this.editDisplayData();
         })
         .catch(err => {
           console.log(err);
@@ -198,6 +221,42 @@ export default {
         }
       }
       this.isDetailCardModalActive = true;
+    },
+    editDisplayData() {
+      let filteredData = this.filterData(
+        this.newsDataOriginal,
+        this.searchInput
+      );
+      let displayData = this.sortData(filteredData, this.sortSelection);
+      this.newsData = displayData;
+    },
+    filterData(originalData, searchInput) {
+      return originalData.filter(el => {
+        let keyword = searchInput.toLowerCase();
+        let titleName = el.title.toLowerCase();
+        let sourceName = el.user.displayName.toLowerCase();
+        let typeName = el.type.toLowerCase();
+        return (
+          titleName.includes(keyword) ||
+          sourceName.includes(keyword) ||
+          typeName.includes(keyword)
+        );
+      });
+    },
+    sortData(filteredData, choice) {
+      if (choice) {
+        if (choice === "byTitle")
+          filteredData = this._.orderBy(filteredData, ["title"], ["asc"]);
+        else if (choice === "bySource")
+          filteredData = this._.orderBy(
+            filteredData,
+            ["user.displayName"],
+            ["asc"]
+          );
+        else if (choice === "byType")
+          filteredData = this._.orderBy(filteredData, ["type"], ["asc"]);
+      }
+      return filteredData;
     }
   }
 };
