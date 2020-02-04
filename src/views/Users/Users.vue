@@ -8,7 +8,7 @@
     <card-comp>
       <template v-slot:option>
         <div class="columns">
-          <div class="column">
+          <div class="column is-4">
             <button
               class="button is-success is-fullwidth"
               @click="addButtonClicked()"
@@ -19,7 +19,7 @@
           <div class="column">
             <div class="columns">
               <div class="column">
-                <b-select placeholder="Sort selection" expanded>
+                <b-select placeholder="Sort selection" v-model="sortSelection" expanded>
                   <option
                     v-for="option in sortChoices"
                     :value="option.value"
@@ -49,22 +49,22 @@
           class="columns is-mobile has-text-centered has-text-weight-bold bottomBorderGrey is-size-7-touch	"
         >
           <div class="column is-1">No.</div>
-          <div class="column">Displayname</div>
-          <div class="column">Fullname</div>
+          <div class="column">Display Name</div>
+          <div class="column">Type</div>
           <div class="column">Email</div>
           <div class="column is-2">Detail</div>
         </div>
         <div
           class="columns is-mobile has-text-centered is-vcentered bottomBorderLightGrey is-size-7-touch"
-          v-for="(item, index) in mockupData"
-          :key="item.id"
+          v-for="(user, index) in usersData"
+          :key="user.id"
         >
           <div class="column is-1">{{ index + 1 }}</div>
-          <div class="column">{{ item.displayname }}</div>
-          <div class="column">{{ item.firstname }} {{ item.lastname }}</div>
-          <div class="column">{{ item.email }}</div>
+          <div class="column">{{ user.displayName }}</div>
+          <div class="column is-capitalized">{{ user.accessType }}</div>
+          <div class="column">{{ user.email }}</div>
           <div class="column cursorPointer is-2">
-            <i class="material-icons" @click="isDetailCardModalActive = true"
+            <i class="material-icons" @click="detailIconClicked(user._id)"
               >find_in_page</i
             >
           </div>
@@ -83,142 +83,190 @@
       </template>
     </card-comp>
     <!-- Detail Modal -->
-    <b-modal :active.sync="isDetailCardModalActive" :width="500" scroll="keep">
-      <div class="card">
-        <div class="card-content">
-          <div class="textCenter marginBottom20px font20px">
-            <b>USER DETAIL</b>
-          </div>
-          <div>
-            <b>Display name</b><span class="marginLeft20px">ก้องสั่งลุย</span>
-            <hr />
-          </div>
-          <div>
-            <b>Full name</b><span class="marginLeft20px">Varit Varit</span>
-            <hr />
-          </div>
-          <div>
-            <b>Email</b><span class="marginLeft20px">varit.as@ku.th</span>
-            <hr />
-          </div>
-          <div>
-            <b>Mobile phone</b><span class="marginLeft20px">081-234-5678</span>
-            <hr />
-          </div>
-          <div class="columns is-centered">
-            <div class="column is-two-fifths">
-              <button
-                class="button is-success is-fullwidth"
-                @click="editButtonClicked()"
-              >
-                <b>EDIT</b>
-              </button>
-            </div>
-            <div class="column is-two-fifths">
-              <button
-                class="button is-success is-fullwidth is-outlined"
-                @click="
-                  isDetailCardModalActive = false;
-                  isRemoveCardModalActive = true;
-                "
-              >
-                <b>REMOVE</b>
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </b-modal>
+    <detail-modal
+      :status="isDetailCardModalActive"
+      context="USER"
+      :displayObject="getDetailModalObject"
+      @modalClosed="isDetailCardModalActive = false"
+      @edit="editButtonClicked(usersDetailId)"
+      @remove="
+        isDetailCardModalActive = false;
+        isRemoveCardModalActive = true;
+      "
+    ></detail-modal>
     <!-- Remove Modal -->
-    <b-modal :active.sync="isRemoveCardModalActive" :width="500" scroll="keep">
-      <div class="card">
-        <div class="card-content">
-          <div class="textCenter marginBottom20px font20px">
-            <b>Are you sure to delete this user ?</b>
-          </div>
-          <hr />
-          <div class="columns is-centered">
-            <div class="column is-two-fifths">
-              <button
-                class="button is-success is-fullwidth"
-                @click="removeButtonClicked()"
-              >
-                <b>CONFIRM</b>
-              </button>
-            </div>
-            <div class="column is-two-fifths">
-              <button
-                class="button is-success is-fullwidth is-outlined"
-                @click="isRemoveCardModalActive = false"
-              >
-                <b>CANCEL</b>
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </b-modal>
+    <remove-modal
+      context="user"
+      :status="isRemoveCardModalActive"
+      @confirm="removeButtonClicked(usersDetailId)"
+      @modalClosed="isRemoveCardModalActive = false"
+    ></remove-modal>
+    <!-- Loading -->
+    <loading-comp :isLoading="isLoading"></loading-comp>
   </div>
 </template>
 
 <script>
 import HeaderComp from "@/components/Mainpage/Header.vue";
 import CardComp from "@/components/Mainpage/Card.vue";
+import userService from "@/services/user.js";
+import DetailModal from "@/components/Mainpage/DetailModal.vue";
+import RemoveModal from "@/components/Mainpage/RemoveModal.vue";
+import LoadingComp from "@/components/Mainpage/Loading.vue";
+import detailModalMixin from "@/mixins/detailModal.js";
+import alertMixin from "@/mixins/alert.js";
 
 export default {
-  components: { HeaderComp, CardComp },
+  mixins: [detailModalMixin, alertMixin],
+  components: { HeaderComp, CardComp, DetailModal, RemoveModal, LoadingComp },
   data() {
     return {
+      sortSelection: "byDisplayName",
       sortChoices: [
-        { value: 0, text: "Sort by display name" },
-        { value: 1, text: "Sort by full name" },
-        { value: 2, text: "Sort by email" }
+        { value: "byDisplayName", text: "Sort by display name" },
+        { value: "byType", text: "Sort by type" },
+        { value: "byEmail", text: "Sort by email" }
       ],
       searchInput: "",
-      mockupData: [
-        {
-          id: 0,
-          displayname: "ก้องสั่งลุย",
-          firstname: "varit",
-          lastname: "varit",
-          email: "varit.as@ku.th"
-        },
-        {
-          id: 1,
-          displayname: "ม่อนสั่งลุย",
-          firstname: "wongsatorn",
-          lastname: "wongsatorn",
-          email: "wongsatorn.as@ku.th"
-        },
-        {
-          id: 2,
-          displayname: "พอลสั่งลุย",
-          firstname: "wasuthun",
-          lastname: "wasuthun",
-          email: "wasuthun.as@ku.th"
-        },
-        {
-          id: 3,
-          displayname: "เจมมี่สั่งลุย",
-          firstname: "sathira",
-          lastname: "sathira",
-          email: "sathira.as@ku.th"
-        }
-      ],
+      usersData: [],
+      usersDataOriginal: [],
+      usersDetailId: null,
+      usersDetailObject: null,
       isDetailCardModalActive: false,
-      isRemoveCardModalActive: false
+      isRemoveCardModalActive: false,
+      isLoading: false,
     };
   },
+  computed: {
+    getDetailModalObject() {
+      let type = this.checkNullAndExist(this.usersDetailObject, "accessType");
+      let category = this.checkNullAndExist(this.usersDetailObject, "category");
+      let displayName = this.checkNullAndExist(
+        this.usersDetailObject,
+        "displayName"
+      );
+      let description = this.checkNullAndExist(
+        this.usersDetailObject,
+        "description"
+      );
+      let address = this.checkNullAndExist(this.usersDetailObject, "address");
+      let email = this.checkNullAndExist(this.usersDetailObject, "email");
+      let mobilephone = this.checkNullAndExist(
+        this.usersDetailObject,
+        "mobilePhone"
+      );
+      return {
+        Type: type,
+        Category: category,
+        "Display Name": displayName,
+        Description: description,
+        Address: address,
+        Email: email,
+        "Mobile Phone": mobilephone
+      };
+    }
+  },
+  watch: {
+    searchInput() {
+      this.editDisplayData();
+    },
+    sortSelection() {
+      this.editDisplayData();
+    }
+  },
+  created() {
+    this.setAllUsers();
+  },
   methods: {
+    setAllUsers() {
+      userService
+        .getAllUsers()
+        .then(res => {
+          let data = res.data;
+          // Set the (accessType = user) if the object doesn't have accessType attribute
+          for (let i in data) {
+            let current = data[i];
+            if (!current.accessType) {
+              current.accessType = "user";
+            }
+          }
+          this.usersData = [...data];
+          this.usersDataOriginal = [...data];
+          this.editDisplayData();
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    },
     addButtonClicked() {
       this.$router.push("/addUsers");
     },
-    editButtonClicked() {
-      this.$router.push("/editUsers/101112");
+    editButtonClicked(usersDetailId) {
+      this.$router.push(`/editUsers/${usersDetailId}`);
     },
     removeButtonClicked() {
-      this.isRemoveCardModalActive = false;
-      alert("removeButtonClicked()");
+      this.isLoading = true;
+      setTimeout(() => {
+        userService
+          .deleteUsersById({ id: this.usersDetailId })
+          .then(res => {
+            this.setAllUsers();
+            this.notificationTrigger("User has been deleted", "success");
+          })
+          .catch(err => {
+            this.notificationTrigger("ERROR !!!", "danger");
+            console.log(err);
+          });
+        this.isLoading = false;
+        this.usersDetailId = null;
+        this.usersDetailObject = null;
+      }, 1000);
+    },
+    detailIconClicked(usersDetailId) {
+      this.usersDetailId = usersDetailId;
+      for (let i in this.usersData) {
+        if (this.usersData[i]._id === this.usersDetailId) {
+          this.usersDetailObject = this.usersData[i];
+          break;
+        }
+      }
+      this.isDetailCardModalActive = true;
+    },
+    editDisplayData() {
+      let filteredData = this.filterData(
+        this.usersDataOriginal,
+        this.searchInput
+      );
+      let displayData = this.sortData(filteredData, this.sortSelection);
+      this.usersData = displayData;
+    },
+    filterData(originalData, searchInput) {
+      return originalData.filter(el => {
+        let keyword = searchInput.toLowerCase();
+        let displayName = el.displayName.toLowerCase();
+        let accessTypeName = el.accessType.toLowerCase();
+        let emailName = el.email.toLowerCase();
+        return (
+          displayName.includes(keyword) ||
+          accessTypeName.includes(keyword) ||
+          emailName.includes(keyword)
+        );
+      });
+    },
+    sortData(filteredData, choice) {
+      if (choice) {
+        if (choice === "byDisplayName")
+          filteredData = this._.orderBy(filteredData, ["displayName"], ["asc"]);
+        else if (choice === "byType")
+          filteredData = this._.orderBy(
+            filteredData,
+            ["accessType"],
+            ["asc"]
+          );
+        else if (choice === "byEmail")
+          filteredData = this._.orderBy(filteredData, ["email"], ["asc"]);
+      }
+      return filteredData;
     }
   }
 };
