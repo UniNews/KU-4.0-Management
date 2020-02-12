@@ -8,28 +8,36 @@
     <card-comp>
       <template v-slot:option>
         <div class="columns">
-          <div class="column">
-              <button class="button is-success is-fullwidth" @click="addButtonClicked()"><b>CREATE NEWS</b></button>  
+          <div class="column is-4">
+            <button
+              class="button is-success is-fullwidth"
+              @click="addButtonClicked()"
+            >
+              <b>CREATE NEWS</b>
+            </button>
           </div>
           <div class="column">
             <div class="columns">
               <div class="column">
                 <b-select placeholder="Sort selection" expanded>
-                    <option
-                        v-for="option in sortChoices"
-                        :value="option.value"
-                        :key="option.value">
-                        {{ option.text }}
-                    </option>
+                  <option
+                    v-for="option in sortChoices"
+                    :value="option.value"
+                    :key="option.value"
+                  >
+                    {{ option.text }}
+                  </option>
                 </b-select>
               </div>
               <div class="column">
                 <b-field>
-                    <b-input placeholder="Search..."
-                        v-model="searchInput"
-                        type="search"
-                        icon="magnify">
-                    </b-input>
+                  <b-input
+                    placeholder="Search..."
+                    v-model="searchInput"
+                    type="search"
+                    icon="magnify"
+                  >
+                  </b-input>
                 </b-field>
               </div>
             </div>
@@ -37,179 +45,162 @@
         </div>
       </template>
       <template v-slot:body>
-        <div class="columns is-mobile has-text-centered has-text-weight-bold bottomBorderGrey is-size-7-touch	">
+        <div
+          class="columns is-mobile has-text-centered has-text-weight-bold bottomBorderGrey is-size-7-touch	"
+        >
           <div class="column is-1">No.</div>
-          <div class="column">Topic</div>
+          <div class="column">Title</div>
           <div class="column is-2">Source</div>
-          <div class="column is-2">Category</div>
-          <div class="column is-2">Latest update</div>
-          <div class="column is-1">Detail</div>
+          <div class="column is-2">Type</div>
+          <div class="column is-2">Detail</div>
         </div>
-          <div 
-            class="columns is-mobile has-text-centered is-vcentered bottomBorderLightGrey is-size-7-touch"
-            v-for="(item, index) in mockupData" :key="item.id"
-          >
-            <div class="column is-1">{{ index + 1 }}</div>
-            <div class="column">{{ item.news }}</div>
-            <div class="column is-2">{{ item.source }}</div>
-            <div class="column is-2">{{ item.category }}</div>
-            <div class="column is-2">{{ item.latestupdate }}</div>
-            <div class="column cursorPointer is-1">
-              <i class="material-icons" @click="isDetailCardModalActive = true">find_in_page</i>
-            </div>
+        <div
+          class="columns is-mobile has-text-centered is-vcentered bottomBorderLightGrey is-size-7-touch"
+          v-for="(news, index) in newsData"
+          :key="news._id"
+        >
+          <div class="column is-1">{{ index + 1 }}</div>
+          <div class="column">{{ news.title }}</div>
+          <div class="column is-2">{{ news.user.displayName }}</div>
+          <div class="column is-2 is-capitalized">{{ news.type }}</div>
+          <div class="column cursorPointer is-2">
+            <i class="material-icons" @click="detailIconClicked(news._id)"
+              >find_in_page</i
+            >
           </div>
+        </div>
       </template>
       <template v-slot:pagination>
         <div class="columns is-centered is-mobile marginY15px">
-            <button class="button">
-              <i class="material-icons">chevron_left</i>
-            </button>
-            <button class="button marginX15px" disabled>1</button>  
-            <button class="button">
-              <i class="material-icons">chevron_right</i>
-            </button> 
+          <button class="button">
+            <i class="material-icons">chevron_left</i>
+          </button>
+          <button class="button marginX15px" disabled>1</button>
+          <button class="button">
+            <i class="material-icons">chevron_right</i>
+          </button>
         </div>
       </template>
     </card-comp>
     <!-- Detail Modal -->
-    <b-modal :active.sync="isDetailCardModalActive" :width="500" scroll="keep">
-      <div class="card">
-        <div class="card-content">
-          <div class="textCenter marginBottom20px font20px">
-            <b>NEWS DETAIL</b>
-          </div>
-          <div>
-            <b>Category</b><span class="marginLeft20px">Store</span>
-            <hr>
-          </div>
-          <div>
-            <b>Source</b><span class="marginLeft20px">CafeDotCom</span>
-            <hr>
-          </div>
-          <div>
-            <b>Topic</b><span class="marginLeft20px">คืนความสุขเด็กคอม! BNK48 มาเยือนสิ้นเดือนมกราคมนี้ !!</span>
-            <hr>
-          </div>
-          <div>
-            <b>Detail</b>
-            <span class="marginLeft20px">
-              คาเฟ่ดอทคอมคืนความสุขให้เด็กคอมโดยการใช้เงินที่หามาได้ไปกับการจ้าง BNK48 
-              มาแสดง concert ให้กับเด็กคอม ในวันที่ 31 ม.ค. ที่กำลังจะถึงนี้ 
-              สถานที่คือ ตึกวิศวคอมพิวเตอร์ คณะวิศวกรรมศาสตร์ มหาวิทยาลัยเกษตราสตร์ 
-              เวลาตั้งแต่ 00.01 - 03.00 น. สิทธิพิเศษเฉพาะเด็กคอมได้ถ่ายรูปคู่กับศิลฟินฟรีก่อนเริ่มงาน
-            </span>
-            <hr>
-          </div>
-          <div class="columns is-centered">
-            <div class="column is-two-fifths">
-              <button 
-                class="button is-success is-fullwidth"
-                @click="editButtonClicked()"
-              ><b>EDIT</b></button>
-            </div>
-            <div class="column is-two-fifths">
-              <button 
-                class="button is-success is-fullwidth is-outlined"
-                @click="isDetailCardModalActive = false; isRemoveCardModalActive = true;"
-              ><b>REMOVE</b></button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </b-modal>
+    <detail-modal
+      :status="isDetailCardModalActive"
+      context="NEWS"
+      :displayObject="getDetailModalObject"
+      @modalClosed="isDetailCardModalActive = false"
+      @edit="editButtonClicked(newsDetailId)"
+      @remove="
+        isDetailCardModalActive = false;
+        isRemoveCardModalActive = true;
+      "
+    ></detail-modal>
     <!-- Remove Modal -->
-    <b-modal :active.sync="isRemoveCardModalActive" :width="500" scroll="keep">
-      <div class="card">
-        <div class="card-content">
-          <div class="textCenter marginBottom20px font20px">
-            <b>Are you sure to delete this news ?</b>
-          </div>
-          <hr>
-          <div class="columns is-centered">
-            <div class="column is-two-fifths">
-              <button 
-                class="button is-success is-fullwidth"
-                @click="removeButtonClicked()"
-              ><b>CONFIRM</b></button>
-            </div>
-            <div class="column is-two-fifths">
-              <button 
-                class="button is-success is-fullwidth is-outlined"
-                @click="isRemoveCardModalActive = false;"
-              ><b>CANCEL</b></button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </b-modal>
+    <remove-modal
+      context="news"
+      :status="isRemoveCardModalActive"
+      @confirm="removeButtonClicked(newsDetailId)"
+      @modalClosed="isRemoveCardModalActive = false"
+    ></remove-modal>
+    <!-- Loading -->
+    <loading-comp :isLoading="isLoading"></loading-comp>
   </div>
 </template>
 
 <script>
 import HeaderComp from "@/components/Mainpage/Header.vue";
 import CardComp from "@/components/Mainpage/Card.vue";
-import newsAxios from "@/axios/newsAxios.js";
+import newsService from "@/services/news.js";
+import LoadingComp from "@/components/Mainpage/Loading.vue";
+import RemoveModal from "@/components/Mainpage/RemoveModal.vue";
+import DetailModal from "@/components/Mainpage/DetailModal.vue";
+import alertMixin from "@/mixins/alert.js";
 
 export default {
-  components: { HeaderComp, CardComp },
+  mixins: [alertMixin],
+  components: { HeaderComp, CardComp, LoadingComp, DetailModal, RemoveModal },
   data() {
     return {
       sortChoices: [
-        { value: 0, text: "Sort by topic" },
+        { value: 0, text: "Sort by title" },
         { value: 1, text: "Sort by source" },
-        { value: 2, text: "Sort by category" },
-        { value: 3, text: "Sort by date" },
+        { value: 2, text: "Sort by type" }
       ],
       searchInput: "",
-      mockupData: [
-        {
-          id: 0,
-          news: "เปิดรับสมัคร staff สำหรับจัดาน potential day 2020",
-          source: "KU Potential Club",
-          category: "Club",
-          latestupdate: "1010/10/10"
-        },
-        {
-          id: 1,
-          news: "ค่ายรวมพล คนถ่ายรูป",
-          source: "KU Photo Club",
-          category: "Club",
-          latestupdate: "1010/10/10"
-        },
-        {
-          id: 2,
-          news: "คืนความสุขเด็กคอม! BNK48 มาเยือนสิ้นเดือนมกราคมนี้ !!",
-          source: "CafeDotCom",
-          category: "Store",
-          latestupdate: "1010/10/10"
-        },
-      ],
+      newsData: [],
+      newsDetailId: null,
+      newsDetailObject: null,
       isDetailCardModalActive: false,
       isRemoveCardModalActive: false,
-    }
+      isLoading: false
+    };
   },
   created() {
-    newsAxios.getAllNews()
-      .then(res => {
-        console.log(res);
-      })
-      .catch(err => {
-        console.log(err);
-      });
+    this.setAllNews();
+  },
+  computed: {
+    getDetailModalObject() {
+      return {
+        Category: this.newsDetailObject ? this.newsDetailObject.type : "",
+        Source: this.newsDetailObject
+          ? this.newsDetailObject.user.displayName
+          : "",
+        Title: this.newsDetailObject ? this.newsDetailObject.title : "",
+        Description: this.newsDetailObject
+          ? this.newsDetailObject.description
+          : ""
+      };
+    }
   },
   methods: {
+    setAllNews() {
+      newsService
+        .getAllNews()
+        .then(res => {
+          this.newsData = [...res.data];
+          this.newsData = this.newsData.filter(el => {
+            return el.type !== "lost-founds";
+          });
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    },
     addButtonClicked() {
       this.$router.push("/addNews");
     },
-    editButtonClicked() {
-      this.$router.push("/editNews/101112");
+    editButtonClicked(newsDetailId) {
+      this.$router.push(`/editNews/${newsDetailId}`);
     },
-    removeButtonClicked() {
-      this.isRemoveCardModalActive = false;
-      alert("removeButtonClicked()");
+    removeButtonClicked(newsDetailId) {
+      this.isLoading = true;
+      setTimeout(() => {
+        newsService
+          .deleteNewsById({ id: this.newsDetailId })
+          .then(res => {
+            this.setAllNews();
+            this.notificationTrigger("News has been deleted", "success");
+          })
+          .catch(err => {
+            this.notificationTrigger("ERROR !!!", "danger");
+            console.log(err);
+          });
+        this.isLoading = false;
+        this.newsDetailId = null;
+        this.newsDetailObject = null;
+      }, 1000);
+    },
+    detailIconClicked(newsDetailId) {
+      this.newsDetailId = newsDetailId;
+      for (let i in this.newsData) {
+        if (this.newsData[i]._id === this.newsDetailId) {
+          this.newsDetailObject = this.newsData[i];
+          break;
+        }
+      }
+      this.isDetailCardModalActive = true;
     }
-  } 
-}
+  }
+};
 </script>
 
 <style scoped>

@@ -7,9 +7,7 @@
     <!-- Card -->
     <card-comp>
       <template v-slot:body>
-        <users-form
-          :isEdit="true"
-        ></users-form>
+        <users-form :isEdit="true"></users-form>
       </template>
     </card-comp>
   </div>
@@ -23,12 +21,10 @@ import UsersForm from "@/views/Users/UsersForm.vue";
 export default {
   components: { HeaderComp, CardComp, UsersForm },
   data() {
-    return {
-    }
+    return {};
   },
-  methods: {
-  } 
-}
+  methods: {}
+};
 </script>
 
 <style scoped>

@@ -1,29 +1,29 @@
-import Vue from 'vue'
-import Router from 'vue-router'
-import Login from '@/views/Login'
-import Dashboard from "@/views/Dashboard/Dashboard.vue"
-import Clubs from "@/views/Clubs/Clubs.vue"
-import ClubsAdd from "@/views/Clubs/ClubsAdd.vue"
-import ClubsEdit from "@/views/Clubs/ClubsEdit.vue"
-import Stores from "@/views/Stores/Stores.vue"
-import StoresAdd from "@/views/Stores/StoresAdd.vue"
-import StoresEdit from "@/views/Stores/StoresEdit.vue"
-import News from "@/views/News/News.vue"
-import NewsAdd from "@/views/News/NewsAdd.vue"
-import NewsEdit from "@/views/News/NewsEdit.vue"
-import Users from "@/views/Users/Users.vue"
-import UsersAdd from "@/views/Users/UsersAdd.vue"
-import UsersEdit from "@/views/Users/UsersEdit.vue"
+import Vue from "vue";
+import Router from "vue-router";
+import Login from "@/views/Login";
+import Dashboard from "@/views/Dashboard/Dashboard.vue";
+import Clubs from "@/views/Clubs/Clubs.vue";
+import ClubsAdd from "@/views/Clubs/ClubsAdd.vue";
+import ClubsEdit from "@/views/Clubs/ClubsEdit.vue";
+import Stores from "@/views/Stores/Stores.vue";
+import StoresAdd from "@/views/Stores/StoresAdd.vue";
+import StoresEdit from "@/views/Stores/StoresEdit.vue";
+import News from "@/views/News/News.vue";
+import NewsAdd from "@/views/News/NewsAdd.vue";
+import NewsEdit from "@/views/News/NewsEdit.vue";
+import Users from "@/views/Users/Users.vue";
+import UsersAdd from "@/views/Users/UsersAdd.vue";
+import UsersEdit from "@/views/Users/UsersEdit.vue";
 import store from "@/store/index.js";
-import { AUTO_LOGIN } from '@/store/actions.type'
+import { AUTO_LOGIN } from "@/store/actions.type";
 
-Vue.use(Router)
+Vue.use(Router);
 
 const router = new Router({
   routes: [
     {
-      path: '/',
-      name: 'Login',
+      path: "/",
+      name: "Login",
       component: Login
     },
     {
@@ -94,13 +94,13 @@ const router = new Router({
       path: "/editUsers/:id",
       name: "EditUsers",
       component: UsersEdit
-    },
+    }
   ]
 });
 
 router.beforeEach((to, from, next) => {
   // try to login first
-  store.dispatch(AUTO_LOGIN)
+  store.dispatch(AUTO_LOGIN);
   if (to.path === "/") {
     if (store.getters.isAuthenticated) next("/dashbaord");
     else next();

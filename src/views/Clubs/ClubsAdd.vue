@@ -7,9 +7,7 @@
     <!-- Card -->
     <card-comp>
       <template v-slot:body>
-        <clubs-form
-          :isEdit="false"
-        ></clubs-form>
+        <clubs-form :isEdit="false"></clubs-form>
       </template>
     </card-comp>
   </div>
@@ -28,7 +26,7 @@ export default {
         { value: 0, text: "Sort by name" },
         { value: 1, text: "Sort by category" },
         { value: 2, text: "Sort by news" },
-        { value: 3, text: "Sort by date" },
+        { value: 3, text: "Sort by date" }
       ],
       searchInput: "",
       mockupData: [
@@ -52,16 +50,16 @@ export default {
           category: "Buddhism",
           news: 101112,
           latestupdate: "1010/10/10"
-        },
-      ],
-    }
+        }
+      ]
+    };
   },
   methods: {
     addButtonClicked() {
       this.$router.push("/addClubs");
     }
-  } 
-}
+  }
+};
 </script>
 
 <style scoped>

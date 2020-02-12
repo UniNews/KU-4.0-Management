@@ -9,27 +9,35 @@
       <template v-slot:option>
         <div class="columns">
           <div class="column">
-              <button class="button is-success is-fullwidth" @click="addButtonClicked()"><b>CREATE NEW CLUB</b></button>  
+            <button
+              class="button is-success is-fullwidth"
+              @click="addButtonClicked()"
+            >
+              <b>CREATE NEW CLUB</b>
+            </button>
           </div>
           <div class="column">
             <div class="columns">
               <div class="column">
                 <b-select placeholder="Sort selection" expanded>
-                    <option
-                        v-for="option in sortChoices"
-                        :value="option.value"
-                        :key="option.value">
-                        {{ option.text }}
-                    </option>
+                  <option
+                    v-for="option in sortChoices"
+                    :value="option.value"
+                    :key="option.value"
+                  >
+                    {{ option.text }}
+                  </option>
                 </b-select>
               </div>
               <div class="column">
                 <b-field>
-                    <b-input placeholder="Search..."
-                        v-model="searchInput"
-                        type="search"
-                        icon="magnify">
-                    </b-input>
+                  <b-input
+                    placeholder="Search..."
+                    v-model="searchInput"
+                    type="search"
+                    icon="magnify"
+                  >
+                  </b-input>
                 </b-field>
               </div>
             </div>
@@ -37,7 +45,9 @@
         </div>
       </template>
       <template v-slot:body>
-        <div class="columns is-mobile has-text-centered has-text-weight-bold bottomBorderGrey">
+        <div
+          class="columns is-mobile has-text-centered has-text-weight-bold bottomBorderGrey"
+        >
           <div class="column is-1">No.</div>
           <div class="column">Name</div>
           <div class="column">Category</div>
@@ -46,29 +56,32 @@
           <div class="column">Latest update</div>
           <div class="column">Detail</div>
         </div>
-          <div 
-            class="columns is-mobile has-text-centered is-vcentered bottomBorderLightGrey"
-            v-for="(item, index) in mockupData" :key="item.id"
-          >
-            <div class="column is-1">{{ index + 1 }}</div>
-            <div class="column">{{ item.name }}</div>
-            <div class="column">{{ item.category }}</div>
-            <div class="column">{{ item.news }}</div>
-            <div class="column">{{ item.latestupdate }}</div>
-            <div class="column cursorPointer">
-              <i class="material-icons" @click="isDetailCardModalActive = true">find_in_page</i>
-            </div>
+        <div
+          class="columns is-mobile has-text-centered is-vcentered bottomBorderLightGrey"
+          v-for="(item, index) in mockupData"
+          :key="item.id"
+        >
+          <div class="column is-1">{{ index + 1 }}</div>
+          <div class="column">{{ item.name }}</div>
+          <div class="column">{{ item.category }}</div>
+          <div class="column">{{ item.news }}</div>
+          <div class="column">{{ item.latestupdate }}</div>
+          <div class="column cursorPointer">
+            <i class="material-icons" @click="isDetailCardModalActive = true"
+              >find_in_page</i
+            >
           </div>
+        </div>
       </template>
       <template v-slot:pagination>
         <div class="columns is-centered is-mobile marginY15px">
-            <button class="button">
-              <i class="material-icons">chevron_left</i>
-            </button>
-            <button class="button marginX15px" disabled>1</button>  
-            <button class="button">
-              <i class="material-icons">chevron_right</i>
-            </button> 
+          <button class="button">
+            <i class="material-icons">chevron_left</i>
+          </button>
+          <button class="button marginX15px" disabled>1</button>
+          <button class="button">
+            <i class="material-icons">chevron_right</i>
+          </button>
         </div>
       </template>
     </card-comp>
@@ -81,48 +94,58 @@
           </div>
           <div>
             <b>Name</b><span class="marginLeft20px">KU Potential Club</span>
-            <hr>
+            <hr />
           </div>
           <div>
             <b>Category</b><span class="marginLeft20px">Buddhism</span>
-            <hr>
+            <hr />
           </div>
           <div>
-            <b>Description</b><span class="marginLeft20px">A Club focuses on buddhism</span>
-            <hr>
+            <b>Description</b
+            ><span class="marginLeft20px">A Club focuses on buddhism</span>
+            <hr />
           </div>
           <div>
-            <b>President</b><span class="marginLeft20px">Mangkorn Jittakul</span>
-            <hr>
+            <b>President</b
+            ><span class="marginLeft20px">Mangkorn Jittakul</span>
+            <hr />
           </div>
           <div>
             <b>Address</b><span class="marginLeft20px">-</span>
-            <hr>
+            <hr />
           </div>
           <div>
             <b>Email</b><span class="marginLeft20px">-</span>
-            <hr>
+            <hr />
           </div>
           <div>
             <b>Phone</b><span class="marginLeft20px">081-123-4567</span>
-            <hr>
+            <hr />
           </div>
           <div>
-            <b>Facebook Page</b><span class="marginLeft20px">KU Potential Club</span>
-            <hr>
+            <b>Facebook Page</b
+            ><span class="marginLeft20px">KU Potential Club</span>
+            <hr />
           </div>
           <div class="columns is-centered">
             <div class="column is-two-fifths">
-              <button 
+              <button
                 class="button is-success is-fullwidth"
                 @click="editButtonClicked()"
-              ><b>EDIT</b></button>
+              >
+                <b>EDIT</b>
+              </button>
             </div>
             <div class="column is-two-fifths">
-              <button 
+              <button
                 class="button is-success is-fullwidth is-outlined"
-                @click="isDetailCardModalActive = false; isRemoveCardModalActive = true;"
-              ><b>REMOVE</b></button>
+                @click="
+                  isDetailCardModalActive = false;
+                  isRemoveCardModalActive = true;
+                "
+              >
+                <b>REMOVE</b>
+              </button>
             </div>
           </div>
         </div>
@@ -135,19 +158,23 @@
           <div class="textCenter marginBottom20px font20px">
             <b>Are you sure to delete this club ?</b>
           </div>
-          <hr>
+          <hr />
           <div class="columns is-centered">
             <div class="column is-two-fifths">
-              <button 
+              <button
                 class="button is-success is-fullwidth"
                 @click="removeButtonClicked()"
-              ><b>CONFIRM</b></button>
+              >
+                <b>CONFIRM</b>
+              </button>
             </div>
             <div class="column is-two-fifths">
-              <button 
+              <button
                 class="button is-success is-fullwidth is-outlined"
-                @click="isRemoveCardModalActive = false;"
-              ><b>CANCEL</b></button>
+                @click="isRemoveCardModalActive = false"
+              >
+                <b>CANCEL</b>
+              </button>
             </div>
           </div>
         </div>
@@ -168,7 +195,7 @@ export default {
         { value: 0, text: "Sort by name" },
         { value: 1, text: "Sort by category" },
         { value: 2, text: "Sort by news" },
-        { value: 3, text: "Sort by date" },
+        { value: 3, text: "Sort by date" }
       ],
       searchInput: "",
       mockupData: [
@@ -192,11 +219,11 @@ export default {
           category: "Buddhism",
           news: 101112,
           latestupdate: "1010/10/10"
-        },
+        }
       ],
       isDetailCardModalActive: false,
-      isRemoveCardModalActive: false,
-    }
+      isRemoveCardModalActive: false
+    };
   },
   methods: {
     addButtonClicked() {
@@ -209,8 +236,8 @@ export default {
       this.isRemoveCardModalActive = false;
       alert("removeButtonClicked()");
     }
-  } 
-}
+  }
+};
 </script>
 
 <style scoped>

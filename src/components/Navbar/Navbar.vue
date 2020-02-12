@@ -5,7 +5,7 @@
         <img
           src="https://www.ku.ac.th/web2012/resources/template2/ui/images/logo72.png"
           alt="Lightweight UI components for Vue.js based on Bulma"
-        >
+        />
       </b-navbar-item>
     </template>
     <template slot="start">
@@ -52,8 +52,7 @@ import { LOGOUT } from "@/store/actions.type";
 
 export default {
   data() {
-    return {
-    }
+    return {};
   },
   methods: {
     logoutButtonClicked() {
@@ -61,7 +60,7 @@ export default {
       location.reload();
     }
   }
-}
+};
 </script>
 
 <style scoped>

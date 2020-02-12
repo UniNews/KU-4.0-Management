@@ -2,119 +2,143 @@
   <div>
     <div v-if="isEdit" class="columns is-centered is-mobile">
       <div class="column is-half-mobile is-one-third-tablet">
-        <img 
-          class="stretchImage blackBorder" 
-          src="https://previews.123rf.com/images/burakowski/burakowski1202/burakowski120200228/12221967-grunge-example-stamp.jpg" 
+        <img
+          class="stretchImage blackBorder"
+          :src="imageURL"
           alt="Image of the club"
-        >
+        />
       </div>
     </div>
     <div class="columns">
       <div class="column">
-        <b-field label="News topic">
-          <b-input v-model="topic"></b-input>
+        <b-field label="News title">
+          <b-input v-model="title"></b-input>
         </b-field>
       </div>
     </div>
     <div class="columns">
       <div class="column">
-        <b-field label="Category">
-            <b-select placeholder="Select category" expanded>
-                <option
-                    v-for="option in categories"
-                    :value="option.value"
-                    :key="option.value">
-                    {{ option.text }}
-                </option>
-            </b-select>
-        </b-field>
-      </div>
-      <div class="column">
-        <b-field label="Source">
-            <b-select placeholder="Select source" expanded>
-                <option
-                    v-for="option in sources"
-                    :value="option.value"
-                    :key="option.value">
-                    {{ option.text }}
-                </option>
-            </b-select>
+        <b-field label="Type">
+          <b-select placeholder="Select type" v-model="type" expanded>
+            <option
+              v-for="option in types"
+              :value="option.value"
+              :key="option.value"
+            >
+              {{ option.text }}
+            </option>
+          </b-select>
         </b-field>
       </div>
     </div>
     <div class="columns">
       <div class="column">
         <b-field label="News Detail">
-            <b-input maxlength="200" type="textarea" v-model="detail"></b-input>
+          <b-input type="textarea" v-model="description"></b-input>
         </b-field>
       </div>
     </div>
     <b-field class="file">
-        <b-upload v-model="file">
-            <a class="button is-primary">
-                <b-icon icon="upload"></b-icon>
-                <span>Click to upload</span>
-            </a>
-        </b-upload>
-        <span class="file-name" v-if="file">
-            {{ file.name }}
-        </span>
+      <b-upload v-model="file">
+        <a class="button is-primary">
+          <b-icon icon="upload"></b-icon>
+          <span>Click to upload</span>
+        </a>
+      </b-upload>
+      <span class="file-name" v-if="file">
+        {{ file.name }}
+      </span>
     </b-field>
     <div class="columns marginY10px">
       <div class="column is-one-third-tablet">
-        <button class="button is-success is-fullwidth" @click="saveButtonClicked()"><b>SAVE</b></button>
+        <button
+          class="button is-success is-fullwidth"
+          @click="saveButtonClicked()"
+        >
+          <b>SAVE</b>
+        </button>
       </div>
       <div class="column is-one-third-tablet">
-        <button class="button is-success is-outlined is-fullwidth" @click="cancelButtonClicked()"><b>CANCEL</b></button>
+        <button
+          class="button is-success is-outlined is-fullwidth"
+          @click="cancelButtonClicked()"
+        >
+          <b>CANCEL</b>
+        </button>
       </div>
     </div>
-
-    <b-loading :is-full-page="true" :active.sync="isLoading" :can-cancel="false"></b-loading>
   </div>
 </template>
 
 <script>
 export default {
   props: {
-    isEdit: Boolean
+    isEdit: Boolean,
+    newsId: String,
+    newsDetailOriginal: Object
   },
   data() {
     return {
       file: null,
-      topic: "",
-      categories: [
-        { value: 0, text: "Club" },
-        { value: 1, text: "Store" },
-        { value: 2, text: "Universities" },
+      imageURL: null,
+      title: null,
+      type: "club",
+      types: [
+        { value: "club", text: "Club" },
+        { value: "promotions", text: "Promotion" },
+        { value: "lost-founds", text: "Lost & Founds" },
+        { value: "universities", text: "Universities" }
       ],
-      sources: [
-        { value: 0, text: "KU Potential Club" },
-        { value: 1, text: "KU Photo Club" },
-        { value: 2, text: "Cafe Dot Com" },
-      ],
-      detail: "",
-      isLoading: false,
+      description: null
+    };
+  },
+  watch: {
+    newsDetailOriginal() {
+      this.setInitialData();
     }
   },
   methods: {
+    setInitialData() {
+      this.imageURL = this.newsDetailOriginal.imageURL[0];
+      this.title = this.newsDetailOriginal.title;
+      this.description = this.newsDetailOriginal.description;
+      this.type = this.newsDetailOriginal.type;
+    },
     saveButtonClicked() {
-      this.isLoading = true;
-      setTimeout(() => {
-        this.isLoading = false;
-        this.$buefy.notification.open({
-          duration: 2000,
-          message: `News has been created`,
-          position: 'is-bottom-right',
-          type: 'is-success'
-        });
-        this.$router.back();
-      }, 3 * 1000)
+      let images = [];
+      if (this.imageURL) {
+        images.push(this.imageURL);
+      } else {
+        images.push(
+          "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcTK-CsPyTnscg0U7fTFrmQn1eYrMLJ-UOVQYFvBrAeqjg-iSQMW"
+        );
+      }
+      if (this.isEdit) {
+        let updatedData = {
+          id: this.newsId,
+          data: {
+            imageURL: images,
+            title: this.title,
+            description: this.description,
+            type: this.type
+          }
+        };
+        this.$emit("updateSaveButtonClicked", updatedData);
+      } else {
+        let createdData = {
+          imageURL: images,
+          title: this.title,
+          description: this.description,
+          type: this.type
+        };
+        this.$emit("createSaveButtonClicked", createdData);
+      }
     },
     cancelButtonClicked() {
       this.$router.back();
     }
   }
-}
+};
 </script>
 
 <style scoped>

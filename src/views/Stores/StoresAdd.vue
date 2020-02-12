@@ -7,9 +7,7 @@
     <!-- Card -->
     <card-comp>
       <template v-slot:body>
-        <stores-form
-          :isEdit="false"
-        ></stores-form>
+        <stores-form :isEdit="false"></stores-form>
       </template>
     </card-comp>
   </div>
@@ -23,15 +21,14 @@ import StoresForm from "@/views/Stores/StoresForm.vue";
 export default {
   components: { HeaderComp, CardComp, StoresForm },
   data() {
-    return {
-    }
+    return {};
   },
   methods: {
     addButtonClicked() {
       this.$router.push("/addStores");
     }
-  } 
-}
+  }
+};
 </script>
 
 <style scoped>
